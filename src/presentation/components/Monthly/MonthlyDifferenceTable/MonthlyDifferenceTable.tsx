@@ -1,4 +1,4 @@
-// /src/presentation/components/BillingTable/BillingTable.tsx
+// /src/components/MonthlyDifferenceTable.tsx
 import React from 'react';
 import { MonthlyDifference } from '../../../../domain/models/MonthlyDifference';
 
@@ -7,7 +7,7 @@ interface MonthlyDifferenceTableProps {
 }
 
 const MonthlyDifferenceTable: React.FC<MonthlyDifferenceTableProps> = ({ billing }) => (
-    <table>
+    <table className="table table-bordered">
         <thead>
             <tr>
                 <th>Fecha</th>
@@ -17,12 +17,12 @@ const MonthlyDifferenceTable: React.FC<MonthlyDifferenceTableProps> = ({ billing
             </tr>
         </thead>
         <tbody>
-            {billing.map((bill) => (
-                <tr key={bill.fecha}>
-                    <td>{bill.fecha}</td>
-                    <td>{bill.qty_clerk}</td>
-                    <td>{bill.qty_sap}</td>
-                    <td>{bill.diferencias}</td>
+            {billing.map((difference) => (
+                <tr key={difference.fecha} className={difference.diferencias !== 0 ? 'table-warning' : ''}>
+                    <td>{difference.fecha}</td>
+                    <td>{difference.qty_clerk}</td>
+                    <td>{difference.qty_sap}</td>
+                    <td>{difference.diferencias}</td>
                 </tr>
             ))}
         </tbody>

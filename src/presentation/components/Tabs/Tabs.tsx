@@ -1,26 +1,47 @@
-// /src/presentation/components/Tabs/Tabs.tsx
-import React from 'react';
-import 'react-tabs/style/react-tabs.css';
-import DailyTable from '../Daily/DailyTable/DailyTable';
-import { Tabs, TabList, Tab, TabPanel } from 'react-tabs';
-import MonthlyTable from '../Monthly/MonthlyTable/MonthlyTable';
+// /src/components/Tabs.tsx
+import React, { useState } from 'react';
+import TodayBilling from '../Daily/DailyTable/TodayBilling';
+import MonthlyBilling from '../Monthly/MonthlyTable/MonthlyBilling';
 
+const Tabs: React.FC = () => {
+    const [activeTab, setActiveTab] = useState('today');
 
-const BillingTabs: React.FC = () => {
+    const renderTabContent = () => {
+        switch (activeTab) {
+            case 'today':
+                return <TodayBilling />;
+            case 'monthly':
+                return <MonthlyBilling />;
+            default:
+                return null;
+        }
+    };
+
     return (
-        <Tabs>
-            <TabList>
-                <Tab>Facturación del día</Tab>
-                <Tab>Facturación por mes</Tab>
-            </TabList>
-            <TabPanel>
-                <DailyTable />
-            </TabPanel>
-            <TabPanel>
-                <MonthlyTable />
-            </TabPanel>
-        </Tabs>
+        <div className="container mt-5">
+            <ul className="nav nav-tabs">
+                <li className="nav-item">
+                    <button
+                        className={`nav-link ${activeTab === 'today' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('today')}
+                    >
+                        Facturación del día
+                    </button>
+                </li>
+                <li className="nav-item">
+                    <button
+                        className={`nav-link ${activeTab === 'monthly' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('monthly')}
+                    >
+                        Facturación por mes
+                    </button>
+                </li>
+            </ul>
+            <div className="tab-content mt-4">
+                {renderTabContent()}
+            </div>
+        </div>
     );
 };
 
-export default BillingTabs;
+export default Tabs;

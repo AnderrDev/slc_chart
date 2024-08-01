@@ -1,13 +1,13 @@
-// /src/presentation/components/DifferencesTable/DifferencesTable.tsx
+// /src/components/TodayDifferenceTable.tsx
 import React from 'react';
 import { TodayDifference } from '../../../../domain/models/TodayDifference';
 
-interface DailyDifferencesTableProps {
+interface TodayDifferenceTableProps {
     differences: TodayDifference[];
 }
 
-const DailyDifferencesTable: React.FC<DailyDifferencesTableProps> = ({ differences }) => (
-    <table>
+const TodayDifferenceTable: React.FC<TodayDifferenceTableProps> = ({ differences }) => (
+    <table className="table table-bordered">
         <thead>
             <tr>
                 <th>Código</th>
@@ -19,7 +19,7 @@ const DailyDifferencesTable: React.FC<DailyDifferencesTableProps> = ({ differenc
         </thead>
         <tbody>
             {differences.map((difference) => (
-                <tr key={difference.whcode}>
+                <tr key={difference.whcode} className={difference.diferencias !== 0 ? 'table-warning' : ''}>
                     <td>{difference.whcode}</td>
                     <td>{difference.whname}</td>
                     <td>{difference.qty_clerk}</td>
@@ -31,4 +31,4 @@ const DailyDifferencesTable: React.FC<DailyDifferencesTableProps> = ({ differenc
     </table>
 );
 
-export default DailyDifferencesTable;
+export default TodayDifferenceTable;
