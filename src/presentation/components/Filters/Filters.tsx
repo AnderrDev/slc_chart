@@ -1,6 +1,7 @@
 // /src/components/Filters.tsx
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Month } from '../../../domain/models/Month';
+import Select from './Select';
 
 interface FilterProps {
     warehouses: { whcode: string }[];
@@ -18,29 +19,41 @@ const Filters: React.FC<FilterProps> = ({
     months,
     selectedMonth,
     onMonthChange,
-}) => (
-    <div className="row mb-3">
-        <div className="col-md-6">
-            <label className="form-label">Kiosco:</label>
-            <select className="form-select" value={selectedWarehouse} onChange={onWarehouseChange}>
-                {warehouses.map((warehouse) => (
-                    <option key={warehouse.whcode} value={warehouse.whcode}>
-                        {warehouse.whcode}
-                    </option>
-                ))}
-            </select>
+}) => {
+    const warehouseOptions = warehouses.map((warehouse) => ({
+        value: warehouse.whcode,
+        label: warehouse.whcode,
+    }));
+
+    const monthOptions = months.map((month) => ({
+        value: month.number,
+        label: month.name,
+    }));
+
+    const handleWarehouseChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+        onWarehouseChange(e);
+    }, [onWarehouseChange]);
+
+    const handleMonthChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+        onMonthChange(e);
+    }, [onMonthChange]);
+
+    return (
+        <div className="row mb-3">
+            <Select
+                label="Kiosco"
+                value={selectedWarehouse}
+                onChange={handleWarehouseChange}
+                options={warehouseOptions}
+            />
+            <Select
+                label="Mes"
+                value={selectedMonth}
+                onChange={handleMonthChange}
+                options={monthOptions}
+            />
         </div>
-        <div className="col-md-6">
-            <label className="form-label">Mes:</label>
-            <select className="form-select" value={selectedMonth} onChange={onMonthChange}>
-                {months.map((month) => (
-                    <option key={month.number} value={month.number}>
-                        {month.name}
-                    </option>
-                ))}
-            </select>
-        </div>
-    </div>
-);
+    );
+};
 
 export default Filters;

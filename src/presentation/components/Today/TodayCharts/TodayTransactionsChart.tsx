@@ -1,15 +1,15 @@
-// /src/presentation/components/Monthly/MonthlyCharts/MonthlyTransactionsChart.tsx
+// /src/presentation/components/Today/TodayCharts/TodayTransactionsChart.tsx
 import React, { useMemo } from 'react';
 import BarChart from '../../Charts/BarChart';
-import { MonthlyDifference } from '../../../../domain/models/MonthlyDifference';
+import { TodayDifference } from '../../../../domain/models/TodayDifference';
 import '../../../../chartConfig'; // Asegúrate de importar la configuración de Chart.js
 
-interface MonthlyTransactionsChartProps {
-    billing: MonthlyDifference[];
+interface TodayTransactionsChartProps {
+    billing: TodayDifference[];
 }
 
-const MonthlyTransactionsChart: React.FC<MonthlyTransactionsChartProps> = ({ billing }) => {
-    const labels = useMemo(() => billing.map(difference => difference.fecha), [billing]);
+const TodayTransactionsChart: React.FC<TodayTransactionsChartProps> = ({ billing }) => {
+    const labels = useMemo(() => billing.map(difference => difference.whname), [billing]);
     const datasets = useMemo(() => [
         {
             label: 'Cantidad Clerk',
@@ -31,7 +31,7 @@ const MonthlyTransactionsChart: React.FC<MonthlyTransactionsChartProps> = ({ bil
         }
     ], [billing]);
 
-    return <BarChart labels={labels} datasets={datasets} title="Transacciones Mensuales" />;
+    return <BarChart labels={labels} datasets={datasets} title="Transacciones Diarias" />;
 };
 
-export default MonthlyTransactionsChart;
+export default TodayTransactionsChart;

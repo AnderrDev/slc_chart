@@ -7,8 +7,8 @@ const App: React.FC = () => {
   return (
     <div className="d-flex flex-column min-vh-100">
       <header>
-        <h1>Reporte de Transacciones por Kiosco</h1>
-        <p>Este reporte muestra las transacciones realizadas por cada kiosco y resalta las discrepancias.</p>
+        <h1>Detalle de Transacciones por Kiosco</h1>
+        <p>Este reporte muestra las transacciones realizadas por cada kiosco y resalta las diferencias.</p>
       </header>
       <main className="flex-grow-1">
         <Tabs />

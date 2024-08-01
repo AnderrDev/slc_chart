@@ -1,27 +1,22 @@
 // /src/presentation/components/Monthly/MonthlyCharts/MonthlyDifferencesChart.tsx
-import React from 'react';
-import { Bar } from 'react-chartjs-2';
+import React, { useMemo } from 'react';
+import BarChart from '../../Charts/BarChart';
 import { MonthlyDifference } from '../../../../domain/models/MonthlyDifference';
-
 interface MonthlyDifferencesChartProps {
   billing: MonthlyDifference[];
 }
 
 const MonthlyDifferencesChart: React.FC<MonthlyDifferencesChartProps> = ({ billing }) => {
-  const data = {
-    labels: billing.slice(0, 10).map((diff) => diff.fecha), // Limita a 10 elementos
-    datasets: [
-      {
-        label: 'Diferencias',
-        data: billing.slice(0, 10).map((diff) => diff.diferencias),
-        backgroundColor: 'rgba(255, 99, 132, 0.6)',
-      },
-    ],
-  };
+  const labels = useMemo(() => billing.slice(0, 10).map((diff) => diff.fecha), [billing]);
+  const datasets = useMemo(() => [
+    {
+      label: 'Diferencias',
+      data: billing.slice(0, 10).map((diff) => diff.diferencias),
+      backgroundColor: 'rgba(255, 99, 132, 0.6)',
+    }
+  ], [billing]);
 
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false, // Permite flexibilidad en el tamaño
+  const options = useMemo(() => ({
     scales: {
       x: {
         beginAtZero: true,
@@ -30,14 +25,9 @@ const MonthlyDifferencesChart: React.FC<MonthlyDifferencesChartProps> = ({ billi
         beginAtZero: true,
       },
     },
-  };
+  }), []);
 
-  return (
-    <div style={{ height: '400px' }}>
-      <h2>Diferencias</h2>
-      <Bar data={data} options={options} />
-    </div>
-  );
+  return <BarChart labels={labels} datasets={datasets} title="Diferencias Mensuales" options={options} />;
 };
 
 export default MonthlyDifferencesChart;

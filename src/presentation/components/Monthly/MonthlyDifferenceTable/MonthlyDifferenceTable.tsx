@@ -6,6 +6,19 @@ interface MonthlyDifferenceTableProps {
     billing: MonthlyDifference[];
 }
 
+interface TableRowProps {
+    difference: MonthlyDifference;
+}
+
+const TableRow: React.FC<TableRowProps> = React.memo(({ difference }) => (
+    <tr key={difference.fecha} className={difference.diferencias !== 0 ? 'table-warning' : ''}>
+        <td>{difference.fecha}</td>
+        <td>{difference.qty_clerk}</td>
+        <td>{difference.qty_sap}</td>
+        <td>{difference.diferencias}</td>
+    </tr>
+));
+
 const MonthlyDifferenceTable: React.FC<MonthlyDifferenceTableProps> = ({ billing }) => (
     <table className="table table-bordered">
         <thead>
@@ -18,12 +31,7 @@ const MonthlyDifferenceTable: React.FC<MonthlyDifferenceTableProps> = ({ billing
         </thead>
         <tbody>
             {billing.map((difference) => (
-                <tr key={difference.fecha} className={difference.diferencias !== 0 ? 'table-warning' : ''}>
-                    <td>{difference.fecha}</td>
-                    <td>{difference.qty_clerk}</td>
-                    <td>{difference.qty_sap}</td>
-                    <td>{difference.diferencias}</td>
-                </tr>
+                <TableRow key={difference.fecha} difference={difference} />
             ))}
         </tbody>
     </table>

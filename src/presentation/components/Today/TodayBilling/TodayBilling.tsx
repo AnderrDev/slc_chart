@@ -1,20 +1,24 @@
 // /src/presentation/pages/DailyBilling.tsx
-import React from 'react';
+import React, { useMemo } from 'react';
 import useTodayDiff from '../../../hooks/useTodayDiff';
-import TodayDifferenceTable from '../DailyDifferencesTable/DailyDifferenceTable';
+import TodayDifferenceTable from '../TodayDifferencesTable/TodayDifferenceTable';
 import TodayDifferencesChart from '../TodayCharts/TodayDifferencesChart';
 import TodayTransactionsChart from '../TodayCharts/TodayTransactionsChart';
+import Loading from '../../Common/Loading';
+import Error from '../../Common/Error';
 
 
 const TodayBilling: React.FC = () => {
     const { differences, loading, error } = useTodayDiff();
 
+    const hasData = useMemo(() => differences.length > 0, [differences]);
+
     return (
         <div className="container">
             <h1 className="my-4">Facturación del día</h1>
-            {loading && <p>Loading differences...</p>}
-            {error && <p>{error.message}</p>}
-            {differences.length > 0 ? (
+            {loading && <Loading message="Loading differences..." />}
+            {error && <Error message={error.message} />}
+            {hasData ? (
                 <>
                     <div className="mb-5">
                         <TodayDifferenceTable differences={differences} />

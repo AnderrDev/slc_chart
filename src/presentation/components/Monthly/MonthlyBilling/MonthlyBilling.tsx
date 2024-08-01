@@ -1,11 +1,13 @@
 // /src/presentation/pages/MonthlyBilling.tsx
-import React from 'react';
+import React, { useMemo } from 'react';
 import useMonthlyDiff from '../../../hooks/useMonthlyDiff';
 import useFilters from '../../../hooks/useFilters';
 import Filters from '../../Filters/Filters';
 import MonthlyDifferenceTable from '../MonthlyDifferenceTable/MonthlyDifferenceTable';
 import MonthlyTransactionsChart from '../MonthlyCharts/MonthlyTransactionsChart';
 import MonthlyDifferencesChart from '../MonthlyCharts/MonthlyDifferencesChart';
+import Loading from '../../Common/Loading';
+import Error from '../../Common/Error';
 
 const MonthlyBilling: React.FC = () => {
     const {
@@ -24,6 +26,10 @@ const MonthlyBilling: React.FC = () => {
         selectedMonth ? selectedMonth.number : 0
     );
 
+    const selectedMonthNumber = selectedMonth ? selectedMonth.number : 0;
+
+    const hasData = useMemo(() => differences.length > 0, [differences]);
+
     return (
         <div className="container">
             <h1 className="my-4">Facturación por mes</h1>
@@ -32,14 +38,14 @@ const MonthlyBilling: React.FC = () => {
                 selectedWarehouse={warehouseCode}
                 onWarehouseChange={(e) => handleWarehouseChange(e.target.value)}
                 months={months}
-                selectedMonth={selectedMonth ? selectedMonth.number : 0}
+                selectedMonth={selectedMonthNumber}
                 onMonthChange={(e) => handleMonthChange(Number(e.target.value))}
             />
-            {warehousesLoading && <p>Loading warehouses...</p>}
-            {warehousesError && <p>{warehousesError.message}</p>}
-            {differencesLoading && <p>Loading differences...</p>}
-            {differencesError && <p>{differencesError.message}</p>}
-            {differences.length > 0 ? (
+            {warehousesLoading && <Loading message="Loading warehouses..." />}
+            {warehousesError && <Error message={warehousesError.message} />}
+            {differencesLoading && <Loading message="Loading differences..." />}
+            {differencesError && <Error message={differencesError.message} />}
+            {hasData ? (
                 <>
                     <div className="mb-5">
                         <MonthlyDifferenceTable billing={differences} />
@@ -59,6 +65,5 @@ const MonthlyBilling: React.FC = () => {
         </div>
     );
 };
-
 
 export default MonthlyBilling;
