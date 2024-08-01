@@ -7,7 +7,6 @@
   --text-color: #333;
   --white-color: #fff;
 
-
   --font-size-small: 0.8em;
   --font-size-medium: 1em;
   --font-size-large: 1.2em;
@@ -56,9 +55,9 @@ header p {
   border-top-left-radius: 0.25rem;
   border-top-right-radius: 0.25rem;
   color: var(--text-color);
+  padding: 15px !important;
+  border: 0 !important;
 }
-
-
 
 .nav-tabs .nav-item .nav-link.active {
   color: var(--white-color);
@@ -70,7 +69,7 @@ header p {
   background-color: var(--white-color);
   border-top: none;
   padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--box-shadow);
 }
 
 .table {
@@ -95,20 +94,9 @@ header p {
   background-color: rgba(60, 60, 60, 0.1);
 }
 
-.nav-tabs {
-  border-bottom: 2px solid var(--primary-color) !important;
-}
-
-.nav-link {
-  padding: 15px !important;
-  border: 0 !important;
-}
-
 .btn {
-
   background-color: var(--primary-color) !important;
   color: var(--white-color) !important;
-
 }
 
 footer {

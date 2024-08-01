@@ -23,10 +23,10 @@ const MonthlyBilling: React.FC = () => {
 
     const { differences, loading: differencesLoading, error: differencesError } = useMonthlyDiff(
         warehouseCode,
-        selectedMonth ? selectedMonth.number : 0
+        selectedMonth ? selectedMonth : 0
     );
 
-    const selectedMonthNumber = selectedMonth ? selectedMonth.number : 0;
+    const selectedMonthNumber = selectedMonth ? selectedMonth : 0;
 
     const hasData = useMemo(() => differences.length > 0, [differences]);
 

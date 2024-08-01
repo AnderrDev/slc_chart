@@ -1,22 +1,32 @@
-// /src/presentation/hooks/useMonthlyDiff.ts
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks/hooks';
 import { fetchMonthlyDiff } from '../store/slices/monthlyDifferenceSlice';
-
+import { RootState } from '../store/store';
+import { MonthlyDifference } from '../../domain/models/MonthlyDifference';
 
 const useMonthlyDiff = (warehouseCode: string, month: number) => {
     const dispatch = useAppDispatch();
-    const differences = useAppSelector((state) => state.monthlyDifferences.data);
-    const loading = useAppSelector((state) => state.monthlyDifferences.loading);
-    const error = useAppSelector((state) => state.monthlyDifferences.error);
+    const { data, loading, error, cache } = useAppSelector((state: RootState) => state.monthlyDifferences);
+    const [localData, setLocalData] = useState<MonthlyDifference[]>([]);
 
     useEffect(() => {
-
-        if (warehouseCode && month > 0) {
+        const cacheKey = `${warehouseCode}_${month}`;
+        if (cache[cacheKey]) {
+            // Si los datos están en la caché, los usamos directamente
+            setLocalData(cache[cacheKey]);
+        } else if (warehouseCode && month > 0) {
             dispatch(fetchMonthlyDiff({ warehouseCode, month }));
         }
-    }, [dispatch, warehouseCode, month]);
-    return { differences, loading, error };
+    }, [dispatch, warehouseCode, month, cache]);
+
+    useEffect(() => {
+        const cacheKey = `${warehouseCode}_${month}`;
+        if (data.length > 0 && !cache[cacheKey]) {
+            setLocalData(data);
+        }
+    }, [data, warehouseCode, month, cache]);
+
+    return { differences: localData, loading, error };
 };
 
 export default useMonthlyDiff;

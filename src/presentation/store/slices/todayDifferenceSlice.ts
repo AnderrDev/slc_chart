@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { TodayDifference } from '../../../domain/models/TodayDifference';
 import { DifferenceRepositoryImpl } from '../../../data/repositories/DifferenceRepositoryImpl';
 import { FetchTodayDiff } from '../../../domain/usecases/FetchTodayDiff';
@@ -7,13 +7,16 @@ import { ApiError } from '../../../domain/models/ApiError';
 const differenceRepository = new DifferenceRepositoryImpl();
 const fetchTodayDiffUseCase = new FetchTodayDiff(differenceRepository);
 
-export const fetchTodayDiff = createAsyncThunk('differences/fetchTodayDiff', async (_, { rejectWithValue }) => {
-    const result = await fetchTodayDiffUseCase.execute();
-    if (result._tag === 'Left') {
-        return rejectWithValue(result.left);
+export const fetchTodayDiff = createAsyncThunk<TodayDifference[], void, { rejectValue: ApiError }>(
+    'differences/fetchTodayDiff',
+    async (_, { rejectWithValue }) => {
+        const result = await fetchTodayDiffUseCase.execute();
+        if (result._tag === 'Left') {
+            return rejectWithValue(result.left);
+        }
+        return result.right;
     }
-    return result.right;
-});
+);
 
 interface TodayDifferenceState {
     data: TodayDifference[];
@@ -35,8 +38,9 @@ const todayDifferenceSlice = createSlice({
         builder
             .addCase(fetchTodayDiff.pending, (state) => {
                 state.loading = true;
+                state.error = null;  // Clear previous error
             })
-            .addCase(fetchTodayDiff.fulfilled, (state, action) => {
+            .addCase(fetchTodayDiff.fulfilled, (state, action: PayloadAction<TodayDifference[]>) => {
                 state.loading = false;
                 state.data = action.payload;
             })

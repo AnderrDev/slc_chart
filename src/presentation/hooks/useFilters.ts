@@ -1,5 +1,4 @@
-// /src/hooks/useFilters.ts
-import { useEffect } from 'react';
+import { useEffect, useCallback, useMemo } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks/hooks';
 import { RootState } from '../store/store';
 import { useMonths } from './useMonths';
@@ -26,18 +25,20 @@ const useFilters = () => {
         }
     }, [months, selectedMonth, dispatch]);
 
-    const handleWarehouseChange = (warehouseCode: string) => {
+    const handleWarehouseChange = useCallback((warehouseCode: string) => {
         dispatch(setWarehouseCode(warehouseCode));
-    };
+    }, [dispatch]);
 
-    const handleMonthChange = (monthNumber: number) => {
+    const handleMonthChange = useCallback((monthNumber: number) => {
         const monthName = months.find((month) => month.number === monthNumber)?.name || 'Enero';
         dispatch(setSelectedMonth({ number: monthNumber, name: monthName }));
-    };
+    }, [months, dispatch]);
+
+    const selectedMonthNumber = useMemo(() => selectedMonth ? selectedMonth.number : 0, [selectedMonth]);
 
     return {
         warehouseCode,
-        selectedMonth,
+        selectedMonth: selectedMonthNumber,
         warehouses,
         months,
         warehousesLoading,

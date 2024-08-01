@@ -1,13 +1,13 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks/hooks';
 import { fetchTodayDiff } from '../store/slices/todayDifferenceSlice';
-
+import { RootState } from '../store/store';
 
 const useTodayDiff = () => {
     const dispatch = useAppDispatch();
-    const differences = useAppSelector((state) => state.todayDifferences.data);
-    const loading = useAppSelector((state) => state.todayDifferences.loading);
-    const error = useAppSelector((state) => state.todayDifferences.error);
+    const differences = useAppSelector((state: RootState) => state.todayDifferences.data);
+    const loading = useAppSelector((state: RootState) => state.todayDifferences.loading);
+    const error = useAppSelector((state: RootState) => state.todayDifferences.error);
 
     useEffect(() => {
         if (differences.length === 0) {
@@ -15,7 +15,9 @@ const useTodayDiff = () => {
         }
     }, [dispatch, differences.length]);
 
-    return { differences, loading, error };
+    const hasDifferences = useMemo(() => differences.length > 0, [differences]);
+
+    return { differences, loading, error, hasDifferences };
 };
 
 export default useTodayDiff;
